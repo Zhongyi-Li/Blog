@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button>click</button>
+    <div draggable="true" style="width: 110px;height: 110px; background-color: brown;"></div>
+    <script>
+        // console.time('calc');
+        // let a = 0
+        // for(let i=0;i<=100;i++){
+        //     a+=1
+        // }
+
+        const btn = document.getElementsByTagName('button')[0]
+        btn.addEventListener('click',reduces(()=>{
+            console.log('1');
+        },1500),false)
+
+
+        //节流
+        function reduces(fn,delay = 200){
+            let timer;
+            return ()=>{
+            if(timer) return
+               timer =  setTimeout(()=>{
+                fn.apply(this,arguments)
+                timer = null
+               },delay)
+            }
+        }
+
+        //防抖
+        function debounce(fn,delay = 200){
+            let timer ;
+
+            return ()=>{
+                if(timer) clearTimeout(timer)
+                timer = setTimeout(()=>{
+                    fn.apply(this,arguments)
+                },1500)
+            }
+        }
+       
+
+
+
+    
+    </script>
+</body>
+</html>
