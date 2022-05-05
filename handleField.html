@@ -1,0 +1,75 @@
+<!--
+ * @Author: 'Zhongyi-Li' '1404377808@qq.com'
+ * @Date: 2022-05-05 23:22:43
+ * @LastEditors: 'Zhongyi-Li' '1404377808@qq.com'
+ * @LastEditTime: 2022-05-05 23:22:53
+ * @FilePath: \Blog\handleField.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // let field = 'qwertyuiopAsDfGh'
+        let field = '1234567890'
+
+        const fieldHide = (str, len) => {
+            if (!str) {
+                return
+            }
+
+            let newStr = String(str)
+            let len_ = newStr.length
+            let starStr = ''
+            for (let i = 0; i < len; i++) {
+                starStr += '*'
+            }
+            const data = (newStr.slice(0, len)).concat(starStr, newStr.slice(len * 2, len_))
+
+            return {
+                data,
+                originData: newStr.slice(len, len * 2)
+            }
+        }
+        const len = field.length
+
+        const { data, originData } = fieldHide(field, Math.floor((len / 3).toString()))
+
+        let encryptStr = data
+        //encryptStr修改为this.params.qrcode
+        if (encryptStr.includes('*')) {
+            let benginNum = encryptStr.indexOf('*')
+            let endNum = encryptStr.lastIndexOf('*') + 1
+            let headPart = encryptStr.substring(0, benginNum)
+            let tailPart = encryptStr.substring(endNum, encryptStr.length)
+            let range = endNum - benginNum  //
+            if (range >= 1) {
+                if (range === originData.length) {
+                    //*长度一致则不需要计算 直接拼接
+                    console.log('长度一致-', headPart + originData + tailPart);
+                } else {
+                    //否则就是小于原有的长度
+                    let newOrigin = originData.slice(0, range)
+                    console.log('newOrigin', headPart + newOrigin + tailPart);
+                }
+            } else {
+                //现有的字段中没有*脱敏内容   直接首尾相加
+                console.log('没有脱敏内容', headPart + tailPart);
+            }
+        }
+
+
+        console.log('field----', field);
+        console.log(data, originData);
+    </script>
+</body>
+
+</html>
