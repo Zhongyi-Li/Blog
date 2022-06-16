@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>jquery轮播图代码示例 - 付杰博客</title>
+    <!--[if gte IE 9]><!-->
+    <script src="https://cdn.staticfile.org/jquery/2.0.3/jquery.min.js"></script>
+    <!--<![endif]-->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/jquery/1.9.1/jquery.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <!--CSS代码-->
+    <style>
+        .showbox {
+            position: relative;
+            height: 300px;
+            width: 570px;
+            overflow: hidden;
+            border: 10px solid #eee;
+            background-color: #eee;
+            border-radius: 10px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+        }
+
+        .imagebox {
+            position: relative;
+            height: 270px;
+            width: 570px;
+            top: 0;
+            left: 5px;
+            overflow: hidden;
+        }
+
+        .imagebox img {
+            display: block;
+            width: 570px;
+            height: 270px;
+            float: left;
+
+        }
+
+        .icobox {
+            position: absolute;
+            border: none;
+            width: 120px;
+            height: 12px;
+            left: 220px;
+            bottom: 10px;
+            text-align: center;
+            line-height: 40px;
+            overflow: hidden;
+        }
+
+        .icobox span {
+            background: url("./icon.png") 0px 0px no-repeat;
+            width: 12px;
+            height: 12px;
+            cursor: pointer;
+            float: left;
+            margin-left: 3px;
+        }
+
+        .icobox span.active {
+            background: url("./icon-active.png") 0px -12px no-repeat;
+            cursor: default;
+        }
+    </style>
+
+    <!-- HTML 代码 -->
+    <!-- 注意：轮播图开始注意这里的图片路径，一定要使用自己的图片路径！-->
+    <div class="showbox">
+        <div class="imagebox">
+            <img src="./a.png" alt="1.jpg">
+            <img src="./b.png" alt="2.jpg">
+            <img src="./c.png" alt="3.jpg">
+        </div>
+        <div class="icobox">
+            <span rel="0" class="active">0</span>
+            <span rel="1">1</span>
+            <span rel="2">2</span>
+        </div>
+    </div>
+
+    <!-- jquery 代码-->
+    <script>
+
+        $(document).ready(function () {
+            var imagebox = $(".showbox").children('.imagebox')[0],//获得图片容器
+                icobox = $(".showbox").children('.icobox')[0],//获得图标容器
+                ico = $(icobox).children('span'),//获得图标数组
+                imagenum = $(imagebox).children().size(),//获得图片数量
+                imageboxWidth = $(imagebox).width(),//获得图片容器的宽度
+                imagewidth = imageboxWidth * imagenum,//获得图片的总宽度
+                activeID = parseInt($($(icobox).children(".active")[0]).attr("rel")),//获得激活的图标ID
+                nextID = 0,//下一个图标的ID
+                intervalID,//setInterval()函数的ID
+                delaytime = 1800,//延迟的时间
+                speed = 700;//执行速度
+            $(imagebox).css({ 'width': imagewidth + "px" });
+
+            var rotate = function (clickID) { //图片滑动函数
+                if (clickID + 1) {
+                    nextID = clickID;
+                } else {
+                    nextID = (activeID + 1) % 3;
+                };
+                $(ico[activeID]).removeClass('active');
+                $(ico[nextID]).addClass('active');
+                $(imagebox).animate({ left: "-" + nextID * imageboxWidth + "px" }, speed);//jQuery中的animate函数
+                activeID = nextID;
+            }
+
+            intervalID = setInterval(rotate, delaytime);//循环函数
+
+            $.each(ico, function (index, val) {
+                $(this).click(function (event) {
+                    clearInterval(intervalID);//清楚之前的定时任务
+                    var clickID = index;
+                    rotate(clickID);//运行一次带参数的rotate函数
+                    intervalID = setInterval(rotate, delaytime);
+                });
+            });
+        });
+    </script>
+
+
+</body>
+
+</html>
