@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border: 0;
+        }
+
+        .all {
+            width: 500px;
+            height: 200px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .screen {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen li {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            float: left;
+        }
+
+        .screen ul {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 3000px;
+        }
+
+        .all ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .all ol li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .all ol li.current {
+            background: yellow;
+        }
+
+        #arr {
+            display: none;
+            z-index: 1000;
+
+        }
+
+        #arr span {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            margin-top: -20px;
+            background: #000;
+            cursor: pointer;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-family: '黑体';
+            font-size: 30px;
+            color: #fff;
+            opacity: 0.3;
+            border: 1px solid #fff;
+        }
+
+        #arr #right {
+            right: 5px;
+            left: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="all" id='box'>
+        <div class="screen">
+            <!-- 无序列表 -->
+            <ul>
+                <li><img src="../jq-banner/a.png" width="500" height="200" /></li>
+                <li><img src="../jq-banner/b.png" width="500" height="200" /></li>
+                <li><img src="../jq-banner/c.png" width="500" height="200" /></li>
+                <li><img src="../jq-banner/d.png" width="500" height="200" /></li>
+                <li><img src="../jq-banner/e.png" width="500" height="200" /></li>
+            </ul>
+            <!-- 有序列表 -->
+            <ol>
+
+            </ol>
+        </div>
+        <div id="arr"><span id="left">&lt;</span><span id="right">&gt;</span></div>
+    </div>
+    <script>
+        // 进行位置动画封装调用
+        function animate(element, offset, setp, times) {
+            // 判断为true则删除，防止多个触发
+            if (element.jsq) {
+                clearInterval(element.jsq)
+            }
+            // 获取当前offset
+            var position = ul.offsetLeft
+            // 判定如果移动位置小于现在的位置，则步长为负数
+            if (offset < position) {
+                setp = -setp
+            }
+            // 开启间隙定时器
+            if (Math.abs(position - offset) > Math.abs(setp)) {
+                element.jsq = setInterval(() => {
+                    position += setp
+                    element.style.left = position + 'px'
+                    // 判断要是现在的位值和预订的位置相差不超过一步长，则停止计时器
+                    if (Math.abs(position - offset) < Math.abs(setp)) {
+                        clearInterval(element.jsq)
+                        element.style.left = offset + 'px'
+                    }
+                }, times);
+            }
+        }
+        //  1.获取元素
+        var ul = document.querySelector('ul')
+        var ol = document.querySelector('ol')
+        var nth = document.querySelector('#arr')
+        var box = document.querySelector('#box')
+        var left = document.querySelector('#left')
+        var right = document.querySelector('#right')
+        // 2.ol中添加点击元素
+        // 在ol循环添加li
+        for (var i = 0; i < ul.children.length; i++) {
+            var li = document.createElement('li')
+            li.innerHTML = i + 1
+            // 给每一个li设置上自定义属性
+            li.setAttribute('a', i)
+            ol.appendChild(li)
+            // 给ol下面每一个li设置点击事件
+            ol.children[i].onclick = function () {
+                // 循环所以li进行排他思想
+                for (var i = 0; i < ol.children.length; i++) {
+                    ol.children[i].className = ''
+                }
+                // 给当前点击的元素添加上class属性
+                this.className = 'current'
+                // 获取到当前点击li的自定属性的值看看是点击到第几张
+                var index = this.getAttribute('a')
+                console.log(index)
+                // 查看照片每一张的宽度
+                var imgwidth = ul.children[0].offsetWidth
+                // 根据宽度乘上第几张得出该移动多少
+                offset = index * -imgwidth
+                // 调用动画函数
+                animate(ul, offset, 50, 30)
+                // 点击事件，index为当前点击的序号的自定义类名的值
+                left.onclick = function () {
+                    if (index > 0) {
+                        index--
+                    }
+                    ol.children[index].click()
+                }
+                right.onclick = function () {
+
+                    if (index < 4) {
+                        index++
+                    }
+                    ol.children[index].click()
+                }
+            }
+        }
+        // 鼠标进入事件
+        box.onmousemove = function () {
+            nth.style.display = 'block'
+        }
+        // 鼠标离开事件
+        box.onmouseleave = function () {
+            nth.style.display = 'none'
+        }
+        //鼠标右边点击事件
+        var Click = 0
+
+        right.onclick = function () {
+
+            Click++
+
+            if (Click == 1) {
+
+                ol.children[1].click()
+
+            }
+
+        }
+
+
+
+        // 自动移动
+        // 1.首先我们要在一开始的时候给第一个按钮添加颜色
+        ol.children[0].className = 'current'
+        // 2.开启计时器每5秒切换一次
+        setInterval(function () {
+            var position = ul.offsetLeft
+            var imgwidth = ul.children[0].offsetWidth
+            var indexs = Math.abs(position / imgwidth)
+            //3. 获取现在的位置，和图片的长度，相除得到下标
+            if (indexs > 3) {
+                indexs = -1
+            }
+            ol.children[indexs + 1].click()
+            // 跳转的时候一定要加1
+        }, 5000)
+    </script>
+</body>
+
+</html>
