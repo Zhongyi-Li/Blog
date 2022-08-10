@@ -1,0 +1,11 @@
+一、
+进入产品页时  didMount 判断请求有没有数据 ，
+1、如果数据为空则store存入 productCombo 模板， newLine 的时候 新建tag 后存入 curCombo
+2、如果有数据 为每个行项目打上tag 后存入 productCombo ，newLine的时候根据当前 productCombo  长度+1打上tag 后存入 curCombo
+
+二、进入 编辑combo页点击 Save时 ，
+      1、判断productCombo 长度<=1 且comboName为空值 ，校验参数直接[ data ], save通过校验后 直接替换productCombo 第一条。
+      2 、大于=1 且comboName有值 ，校验参数直接[...productCombo , data ], save通过校验后 将当前行 push 进productCombo
+
+三、点击新建pack 时把combo Name 和 物料组 带到Modal组件中 ，save pack 和 校验物料号时就把 combo Name带上
+     
